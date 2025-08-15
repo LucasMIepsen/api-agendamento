@@ -18,7 +18,7 @@ import com.example.blu_cidadao_app.api_agendamento.model.Agendamento;
 import com.example.blu_cidadao_app.api_agendamento.service.AgendamentoService;
 
 @RestController
-@RequestMapping("/Agendamento")
+@RequestMapping("/agendamentos")
 @CrossOrigin
 public class AgendamentoController {
 

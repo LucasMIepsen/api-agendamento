@@ -18,7 +18,7 @@ import com.example.blu_cidadao_app.api_agendamento.model.Area;
 import com.example.blu_cidadao_app.api_agendamento.service.AreaService;
 
 @RestController
-@RequestMapping("/Area")
+@RequestMapping("/areas")
 @CrossOrigin
 public class AreaController {
 

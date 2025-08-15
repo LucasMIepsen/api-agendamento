@@ -18,7 +18,7 @@ import com.example.blu_cidadao_app.api_agendamento.model.Unidade;
 import com.example.blu_cidadao_app.api_agendamento.service.UnidadeService;
 
 @RestController
-@RequestMapping("/Unidade")
+@RequestMapping("/unidades")
 @CrossOrigin
 public class UnidadeController {
 

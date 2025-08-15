@@ -18,7 +18,7 @@ import com.example.blu_cidadao_app.api_agendamento.model.Historico;
 import com.example.blu_cidadao_app.api_agendamento.service.HistoricoService;
 
 @RestController
-@RequestMapping("/Historico")
+@RequestMapping("/historicos")
 @CrossOrigin
 public class HistoricoController {
 

@@ -1,5 +1,6 @@
 package com.example.blu_cidadao_app.api_agendamento.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public AgendamentoService(AgendamentoRepo repo) {
 	// Create
 
 	public void inserirAgendamento (Agendamento a) {
+		a.setData(LocalDate.now());
 		repo.save(a);
 	}
 	

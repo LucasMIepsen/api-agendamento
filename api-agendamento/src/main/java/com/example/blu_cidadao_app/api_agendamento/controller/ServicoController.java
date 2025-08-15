@@ -18,7 +18,7 @@ import com.example.blu_cidadao_app.api_agendamento.model.Servico;
 import com.example.blu_cidadao_app.api_agendamento.service.ServicoService;
 
 @RestController
-@RequestMapping("/Servico")
+@RequestMapping("/servicos")
 @CrossOrigin
 public class ServicoController {
 

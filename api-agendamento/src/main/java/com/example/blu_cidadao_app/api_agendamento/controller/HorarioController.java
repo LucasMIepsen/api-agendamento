@@ -18,7 +18,7 @@ import com.example.blu_cidadao_app.api_agendamento.model.Horario;
 import com.example.blu_cidadao_app.api_agendamento.service.HorarioService;
 
 @RestController
-@RequestMapping("/Horario")
+@RequestMapping("/horarios")
 @CrossOrigin
 public class HorarioController {
 
