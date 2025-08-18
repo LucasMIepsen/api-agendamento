@@ -3,7 +3,6 @@ package com.example.blu_cidadao_app.api_agendamento.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.blu_cidadao_app.api_agendamento.model.Agendamento;
@@ -17,7 +16,6 @@ public class AgendamentoService {
     private final AgendamentoRepo agendamentoRepo;
     private final HorarioRepo horarioRepo;
 
-    @Autowired
     public AgendamentoService(AgendamentoRepo agendamentoRepo, HorarioRepo horarioRepo) {
         this.agendamentoRepo = agendamentoRepo;
         this.horarioRepo = horarioRepo;

@@ -18,32 +18,28 @@ private ServicoRepo repo;
 		this.repo = repo;
 	}
 
-		// Create
-
-		public void inserirServico (Servico s) {
-			repo.save(s);
-		}
-		
-		// Read
-		
-		public List<Servico> listarServico() {
-			return repo.findAll();
-		}
-		
-		public Optional<Servico> obterServicoPorId(int id) {
-			return repo.findById(id);
-		}
-		
-		//Update
-		
-		public void atualizarServico (Servico s) {
-			repo.save(s);
-		}
-		
-		// Delete
-		
-		public void deletarServico(int id) {
-			repo.deleteById(id);
-		}
+	// Create
+	public void inserirServico (Servico s) {
+		repo.save(s);
+	}
+	
+	// Read
+	public List<Servico> listarServico() {
+		return repo.findAll();
+	}
+	
+	public Optional<Servico> obterServicoPorId(int id) {
+		return repo.findById(id);
+	}
+	
+	//Update
+	public void atualizarServico (Servico s) {
+		repo.save(s);
+	}
+	
+	// Delete
+	public void deletarServico(int id) {
+		repo.deleteById(id);
+	}
 	
 }

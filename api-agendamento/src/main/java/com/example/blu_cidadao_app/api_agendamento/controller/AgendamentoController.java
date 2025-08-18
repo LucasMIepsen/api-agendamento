@@ -3,7 +3,6 @@ package com.example.blu_cidadao_app.api_agendamento.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +24,6 @@ public class AgendamentoController {
 
 	private AgendamentoService servico;
 	
-	@Autowired
 	public AgendamentoController(AgendamentoService servico) {
 		this.servico = servico;
 	}
