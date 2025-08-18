@@ -24,7 +24,7 @@ public AgendamentoService(AgendamentoRepo repo) {
 
 	// Create
 
-public Agendamento cadastrarOuvidoria(Agendamento agendamento) {
+public Agendamento inserirAgendamento(Agendamento agendamento) {
 	agendamento.setProtocolo(protocoloAgendamento());
     agendamento.setData(dataAgendamento());
     return repo.save(agendamento);
