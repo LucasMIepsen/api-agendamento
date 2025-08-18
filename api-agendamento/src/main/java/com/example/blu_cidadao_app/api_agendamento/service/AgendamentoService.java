@@ -14,10 +14,10 @@ public class AgendamentoService {
 
 private AgendamentoRepo repo;
 	
-@Autowired
-public AgendamentoService(AgendamentoRepo repo) {
-	this.repo = repo;
-}
+	@Autowired
+	public AgendamentoService(AgendamentoRepo repo) {
+		this.repo = repo;
+	}
 
 	// Create
 

@@ -2,6 +2,7 @@ package com.example.blu_cidadao_app.api_agendamento.service;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +20,11 @@ private HorarioRepo repo;
 	}
 
 		// Create
-
 		public void inserirHorario (Horario h) {
 			repo.save(h);
 		}
 		
 		// Read
-		
 		public List<Horario> listarHorario() {
 			return repo.findAll();
 		}
@@ -35,13 +34,11 @@ private HorarioRepo repo;
 		}
 		
 		//Update
-		
 		public void atualizarHorario (Horario h) {
 			repo.save(h);
 		}
 		
 		// Delete
-		
 		public void deletarHorario(int id) {
 			repo.deleteById(id);
 		}
