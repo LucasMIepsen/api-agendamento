@@ -17,12 +17,20 @@ public class Servico {
     @Column(name = "nome")
     private String nome;
 
+    @Column(name = "area")
+    private String area;
+
+    @Column(name = "descricao")
+    private String descricao;
+
     public Servico() {
     }
 
-    public Servico(Integer id_servico, String nome) {
+    public Servico(Integer id_servico, String nome, String area, String descricao) {
         this.id_servico = id_servico;
         this.nome = nome;
+        this.area = area;
+        this.descricao = descricao;
     }
 
     public Integer getId_servico() {
@@ -39,5 +47,21 @@ public class Servico {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+        public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 }

@@ -1,7 +1,4 @@
 package com.example.blu_cidadao_app.api_agendamento.controller;
-import com.example.blu_cidadao_app.api_agendamento.repo.ServicoRepo;
-import com.example.blu_cidadao_app.api_agendamento.repo.UnidadeRepo;
-import com.example.blu_cidadao_app.api_agendamento.service.AgendamentoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,48 +7,37 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.blu_cidadao_app.api_agendamento.model.Agendamento;
-import com.example.blu_cidadao_app.api_agendamento.model.Servico;
-import com.example.blu_cidadao_app.api_agendamento.model.Unidade;
+import com.example.blu_cidadao_app.api_agendamento.service.AgendamentoService;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/agendamento")
+@RequestMapping("/api/agendamentos")
 public class AgendamentoController {
 
     @Autowired
     private AgendamentoService agendamentoService;
-    @Autowired
-    private ServicoRepo servicoRepo;
 
-    @Autowired
-    private UnidadeRepo unidadeRepo;
-
-    AgendamentoController(UnidadeRepo unidadeRepo) {
-        this.unidadeRepo = unidadeRepo;
+    @PostMapping
+    public ResponseEntity<Agendamento> criarAgendamento(
+            @RequestParam Integer id_servico,
+            @RequestParam Integer id_unidade,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataHora,
+            @RequestParam(required = false) String observacao) {
+        
+        Agendamento novoAgendamento = agendamentoService.criarAgendamento(id_servico, id_unidade, dataHora, observacao);
+        return new ResponseEntity<>(novoAgendamento, HttpStatus.CREATED);
     }
 
-    @GetMapping("/servicos")
-    public List<Servico> getAllServicos() {
-        return servicoRepo.findAll();
+    @GetMapping("/{protocolo}")
+    public ResponseEntity<Agendamento> getAgendamentoByProtocolo(@PathVariable String protocolo) {
+        Agendamento agendamento = agendamentoService.findByProtocolo(protocolo);
+        return ResponseEntity.ok(agendamento);
     }
 
-    @GetMapping("/unidades")
-    public List<Unidade> getAllUnidades() {
-        return unidadeRepo.findAll();
-    }
-
-    @GetMapping("/horarios")
-    public List<LocalTime> getHorariosDisponiveis(@RequestParam Integer id_unidade, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
-        return agendamentoService.buscarHorariosDisponiveis(id_unidade, data);
-    }
-
-    @PostMapping("/agendamentos")
-    public ResponseEntity<Agendamento> criarAgendamento(@RequestBody Agendamento novoAgendamento) {
-        Agendamento salvo = agendamentoService.salvarAgendamento(novoAgendamento);
-        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
+    @DeleteMapping("/{protocolo}")
+    public ResponseEntity<Agendamento> cancelarAgendamento(@PathVariable String protocolo) {
+        Agendamento agendamentoCancelado = agendamentoService.cancelarAgendamento(protocolo);
+        return ResponseEntity.ok(agendamentoCancelado);
     }
 }
-

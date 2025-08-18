@@ -1,20 +1,21 @@
 package com.example.blu_cidadao_app.api_agendamento.service;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.blu_cidadao_app.api_agendamento.model.Agendamento;
+import com.example.blu_cidadao_app.api_agendamento.model.Servico;
 import com.example.blu_cidadao_app.api_agendamento.model.Unidade;
+import com.example.blu_cidadao_app.api_agendamento.model.enums.StatusAgendamento;
 import com.example.blu_cidadao_app.api_agendamento.repo.AgendamentoRepo;
+import com.example.blu_cidadao_app.api_agendamento.repo.ServicoRepo;
 import com.example.blu_cidadao_app.api_agendamento.repo.UnidadeRepo;
 
-import java.time.LocalDate;
+import org.springframework.http.HttpStatus;
+
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class AgendamentoService {
@@ -23,38 +24,36 @@ public class AgendamentoService {
     private AgendamentoRepo agendamentoRepository;
 
     @Autowired
+    private ServicoRepo servicoRepository;
+
+    @Autowired
     private UnidadeRepo unidadeRepository;
 
-    public String gerarProtocolo() {
-        return "AGND-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-    }
+    public Agendamento criarAgendamento(Integer id_servico, Integer id_unidade, LocalDateTime dataHora, String observacao) {
+        Servico servico = servicoRepository.findById(id_servico)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Serviço não encontrado"));
 
-    public List<LocalTime> buscarHorariosDisponiveis(Integer id_unidade, LocalDate data) {
-        Unidade unidade = unidadeRepository.findById(id_unidade).orElseThrow(() -> new RuntimeException("Unidade não encontrada"));
-        
-        LocalDateTime inicioDia = data.atStartOfDay();
-        LocalDateTime fimDia = data.atTime(LocalTime.MAX);
-        
-        List<Agendamento> agendamentosOcupados = agendamentoRepository.findByDataHoraBetweenAndUnidade(inicioDia, fimDia, unidade);
-        
-        Set<LocalTime> horariosOcupados = agendamentosOcupados.stream()
-                .map(agendamento -> agendamento.getDataHora().toLocalTime())
-                .collect(Collectors.toSet());
-        
-        List<LocalTime> todosHorarios = new ArrayList<>();
-        LocalTime horario = LocalTime.of(9, 0);
-        while (horario.isBefore(LocalTime.of(17, 0))) {
-            todosHorarios.add(horario);
-            horario = horario.plusMinutes(30);
-        }
-        
-        return todosHorarios.stream()
-                .filter(disponivel -> !horariosOcupados.contains(disponivel))
-                .collect(Collectors.toList());
-    }
+        Unidade unidade = unidadeRepository.findById(id_unidade)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unidade não encontrada"));
 
-    public Agendamento salvarAgendamento(Agendamento novoAgendamento) {
-        novoAgendamento.setProtocolo(gerarProtocolo());
+        Agendamento novoAgendamento = new Agendamento();
+        novoAgendamento.setServico(servico);
+        novoAgendamento.setUnidade(unidade);
+        novoAgendamento.setDataHora(dataHora);
+        novoAgendamento.setProtocolo(UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase());
+        novoAgendamento.setStatus(StatusAgendamento.CONFIRMADO);
+
         return agendamentoRepository.save(novoAgendamento);
+    }
+    
+    public Agendamento findByProtocolo(String protocolo) {
+        return agendamentoRepository.findByProtocolo(protocolo)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Agendamento não encontrado"));
+    }
+
+    public Agendamento cancelarAgendamento(String protocolo) {
+        Agendamento agendamento = findByProtocolo(protocolo);
+        agendamento.setStatus(StatusAgendamento.CANCELADO);
+        return agendamentoRepository.save(agendamento);
     }
 }

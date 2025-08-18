@@ -15,15 +15,19 @@ public class Unidade {
     private Integer id_unidade;
 
     @Column(name = "nome")
-    private String nome;    
+    private String nome;   
+    
+    @Column(name = "endereco")
+    private String endereco;
 
     public Unidade(){
 
     }
 
-    public Unidade(Integer id_unidade, String nome){
+    public Unidade(Integer id_unidade, String nome, String endereco){
         this.id_unidade = id_unidade;
         this.nome = nome;
+        this.endereco = endereco;
     }
 
     public Integer getId_unidade() {
@@ -42,5 +46,11 @@ public class Unidade {
         this.nome = nome;
     }
 
+        public String getEndereco() {
+        return endereco;
+    }
 
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
 }

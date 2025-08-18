@@ -1,16 +1,14 @@
 package com.example.blu_cidadao_app.api_agendamento.repo;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.example.blu_cidadao_app.api_agendamento.model.Agendamento;
-import com.example.blu_cidadao_app.api_agendamento.model.Unidade;
 
-import java.time.LocalDateTime;
-
-
+@Repository
 public interface AgendamentoRepo extends JpaRepository<Agendamento, Integer>{
-    List<Agendamento> findByDataHoraBetweenAndUnidade(LocalDateTime start, LocalDateTime end, Unidade unidade);
+    Optional<Agendamento> findByProtocolo(String protocolo);
 }
 
