@@ -1,7 +1,5 @@
 package com.example.blu_cidadao_app.api_agendamento.model;
 
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,38 +8,36 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Servico")
+@Table(name = "servico")
 public class Servico {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idServico;
+    private Integer id_servico;
 
-    @Column(nullable = false, unique = true, length = 45)
+    @Column(name = "nome")
     private String nome;
 
-    public Servico (Integer idServico, String nome, List<Area> area, List<Agendamento> agendamento) {
-    	
-    	this.idServico = idServico;
-    	this.nome = nome;
-    	
+    public Servico() {
     }
 
-	public Integer getIdServico() {
-		return idServico;
-	}
+    public Servico(Integer id_servico, String nome) {
+        this.id_servico = id_servico;
+        this.nome = nome;
+    }
 
-	public void setIdServico(Integer idServico) {
-		this.idServico = idServico;
-	}
+    public Integer getId_servico() {
+        return id_servico;
+    }
 
-	public String getNome() {
-		return nome;
-	}
+    public void setId_servico(Integer id_servico) {
+        this.id_servico = id_servico;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-    
+    public String getNome() {
+        return nome;
+    }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 }

@@ -1,72 +1,57 @@
 package com.example.blu_cidadao_app.api_agendamento.controller;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.example.blu_cidadao_app.api_agendamento.model.Agendamento;
+import com.example.blu_cidadao_app.api_agendamento.repo.ServicoRepo;
+import com.example.blu_cidadao_app.api_agendamento.repo.UnidadeRepo;
 import com.example.blu_cidadao_app.api_agendamento.service.AgendamentoService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.blu_cidadao_app.api_agendamento.model.Agendamento;
+import com.example.blu_cidadao_app.api_agendamento.model.Servico;
+import com.example.blu_cidadao_app.api_agendamento.model.Unidade;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
 @RestController
-@RequestMapping("/agendamentos")
-@CrossOrigin
+@RequestMapping("/agendamento")
 public class AgendamentoController {
 
-	private AgendamentoService servico;
-	
+    @Autowired
+    private AgendamentoService agendamentoService;
+    @Autowired
+    private ServicoRepo servicoRepo;
 
-	public AgendamentoController(AgendamentoService servico) {
-		this.servico = servico;
-	}
-	
-	//Create
-	@PostMapping
-    public ResponseEntity<Agendamento> inserirAgendamento(@RequestBody Agendamento a) {
-        Agendamento nova = servico.inserirAgendamento(a);
-        return ResponseEntity.ok(nova);
-    }
-	
-	//Read
-	@GetMapping
-	public List<Agendamento> listarAgendamento() {
-		return servico.listarAgendamento();
-	}
-	
-	// Buscar por ID
-    @GetMapping("/{protocolo}")
-    public ResponseEntity<Agendamento> buscarAgendamento(@PathVariable String protocolo) {
-        return servico.buscarPorProtocolo(protocolo)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @Autowired
+    private UnidadeRepo unidadeRepo;
+
+    AgendamentoController(UnidadeRepo unidadeRepo) {
+        this.unidadeRepo = unidadeRepo;
     }
 
-	// Update
-    // Atualizar por ID
-    @PutMapping("/{id}")
-    public ResponseEntity<Agendamento> atualizarAgendamento(@PathVariable int id, @RequestBody Agendamento a) {
-        try {
-        	Agendamento atualizada = servico.atualizarAgendamento(id, a);
-            return ResponseEntity.ok(atualizada);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/servicos")
+    public List<Servico> getAllServicos() {
+        return servicoRepo.findAll();
     }
-	
- // Deletar por ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarAgendamento(@PathVariable int id) {
-        servico.deletarAgendamento(id);
-        return ResponseEntity.noContent().build();
+
+    @GetMapping("/unidades")
+    public List<Unidade> getAllUnidades() {
+        return unidadeRepo.findAll();
     }
-	
+
+    @GetMapping("/horarios")
+    public List<LocalTime> getHorariosDisponiveis(@RequestParam Integer id_unidade, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
+        return agendamentoService.buscarHorariosDisponiveis(id_unidade, data);
+    }
+
+    @PostMapping("/agendamentos")
+    public ResponseEntity<Agendamento> criarAgendamento(@RequestBody Agendamento novoAgendamento) {
+        Agendamento salvo = agendamentoService.salvarAgendamento(novoAgendamento);
+        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
+    }
 }
+

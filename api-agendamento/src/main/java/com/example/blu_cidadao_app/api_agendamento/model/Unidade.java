@@ -1,7 +1,5 @@
 package com.example.blu_cidadao_app.api_agendamento.model;
 
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,52 +8,39 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Unidade")
+@Table(name = "unidade")
 public class Unidade {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idUnidade;
+    private Integer id_unidade;
 
-    @Column(nullable = false, length = 45)
-    private String nome;
+    @Column(name = "nome")
+    private String nome;    
 
-    @Column(length = 45)
-    private String endereco;
+    public Unidade(){
 
-	public Unidade(){
-		
-	}
-
-    public Unidade (Integer idUnidade, String nome, String endereco, List<Agendamento> agendamento) {
-    	this.idUnidade = idUnidade;
-    	this.nome = nome;
-    	this.endereco = endereco;
-    	
     }
 
-	public Integer getIdUnidade() {
-		return idUnidade;
-	}
+    public Unidade(Integer id_unidade, String nome){
+        this.id_unidade = id_unidade;
+        this.nome = nome;
+    }
 
-	public void setIdUnidade(Integer idUnidade) {
-		this.idUnidade = idUnidade;
-	}
+    public Integer getId_unidade() {
+        return id_unidade;
+    }
 
-	public String getNome() {
-		return nome;
-	}
+    public void setId_unidade(Integer id_unidade) {
+        this.id_unidade = id_unidade;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public String getEndereco() {
-		return endereco;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
-    
+
 }

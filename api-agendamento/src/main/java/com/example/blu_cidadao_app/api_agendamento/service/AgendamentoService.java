@@ -1,66 +1,60 @@
 package com.example.blu_cidadao_app.api_agendamento.service;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.blu_cidadao_app.api_agendamento.model.Agendamento;
+import com.example.blu_cidadao_app.api_agendamento.model.Unidade;
 import com.example.blu_cidadao_app.api_agendamento.repo.AgendamentoRepo;
+import com.example.blu_cidadao_app.api_agendamento.repo.UnidadeRepo;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AgendamentoService {
 
-	private AgendamentoRepo repo;
+    @Autowired
+    private AgendamentoRepo agendamentoRepository;
 
-	public AgendamentoService(AgendamentoRepo repo) {
-		this.repo = repo;
-	}
-		
-	// Create
-	public Agendamento inserirAgendamento(Agendamento agendamento) {
-		agendamento.setProtocolo(protocoloAgendamento());
-		agendamento.setData(dataAgendamento());
-		return repo.save(agendamento);
-	}
-		
-	// Gerar protocolo único
-	public String protocoloAgendamento() {
-		return "AGD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-	}
-		
-	// Gerar data do dia
-    public LocalDate dataAgendamento() {
-        return LocalDate.now();
+    @Autowired
+    private UnidadeRepo unidadeRepository;
+
+    public String gerarProtocolo() {
+        return "AGND-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
-	
-	// Read
-	public List<Agendamento> listarAgendamento() {
-		return repo.findAll();
-	}
-	
-	public Optional<Agendamento> buscarPorProtocolo(String protocolo) {
-        return repo.findByProtocolo(protocolo);
+
+    public List<LocalTime> buscarHorariosDisponiveis(Integer id_unidade, LocalDate data) {
+        Unidade unidade = unidadeRepository.findById(id_unidade).orElseThrow(() -> new RuntimeException("Unidade não encontrada"));
+        
+        LocalDateTime inicioDia = data.atStartOfDay();
+        LocalDateTime fimDia = data.atTime(LocalTime.MAX);
+        
+        List<Agendamento> agendamentosOcupados = agendamentoRepository.findByDataHoraBetweenAndUnidade(inicioDia, fimDia, unidade);
+        
+        Set<LocalTime> horariosOcupados = agendamentosOcupados.stream()
+                .map(agendamento -> agendamento.getDataHora().toLocalTime())
+                .collect(Collectors.toSet());
+        
+        List<LocalTime> todosHorarios = new ArrayList<>();
+        LocalTime horario = LocalTime.of(9, 0);
+        while (horario.isBefore(LocalTime.of(17, 0))) {
+            todosHorarios.add(horario);
+            horario = horario.plusMinutes(30);
+        }
+        
+        return todosHorarios.stream()
+                .filter(disponivel -> !horariosOcupados.contains(disponivel))
+                .collect(Collectors.toList());
     }
-	
-	public Agendamento atualizarAgendamento(int id, Agendamento novoAgendamento) {
-	    return repo.findById(id).map(agendamento -> {
-	        agendamento.setDescricao(novoAgendamento.getDescricao());
-	        agendamento.setData(novoAgendamento.getData());
-	        agendamento.setHora(novoAgendamento.getHora());
-	        agendamento.setStatus(novoAgendamento.getStatus());
-	        agendamento.setServico(novoAgendamento.getServico());
-	        agendamento.setUnidade(novoAgendamento.getUnidade());
-	        agendamento.setHistorico(novoAgendamento.getHistorico());
-	        return repo.save(agendamento);
-	    }).orElseThrow(() -> new RuntimeException("Agendamento não encontrado!"));
-	}
-	
-	// Delete
-	public void deletarAgendamento(int id) {
-		repo.deleteById(id);
-	}
-	
+
+    public Agendamento salvarAgendamento(Agendamento novoAgendamento) {
+        novoAgendamento.setProtocolo(gerarProtocolo());
+        return agendamentoRepository.save(novoAgendamento);
+    }
 }
