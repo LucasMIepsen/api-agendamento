@@ -1,5 +1,7 @@
 package com.example.blu_cidadao_app.api_agendamento.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,10 +20,8 @@ public class Historico {
     private Integer idHistorico;
 
     @Column(length = 45)
-    private String dataEvento;
+    private LocalDateTime dataEvento;
 
-    @Column(length = 45)
-    private String descricao;
 
     @Column(length = 45)
     private String status;
@@ -30,11 +30,10 @@ public class Historico {
     @JoinColumn(name = "Agendamento_idAgendamento", nullable = false)
     private Agendamento agendamento;
     
-    public Historico (Integer idHistorico, String dataEvento, String descricao, String status, Agendamento agendamento) {
+    public Historico (Integer idHistorico, LocalDateTime dataEvento, String descricao, String status, Agendamento agendamento) {
     	
     	this.idHistorico = idHistorico;
     	this.dataEvento = dataEvento;
-    	this.descricao = descricao;
     	this.status = status;
     	this.agendamento = agendamento;
     	
@@ -48,20 +47,12 @@ public class Historico {
 		this.idHistorico = idHistorico;
 	}
 
-	public String getDataEvento() {
+	public LocalDateTime getDataEvento() {
 		return dataEvento;
 	}
 
-	public void setDataEvento(String dataEvento) {
+	public void setDataEvento(LocalDateTime dataEvento) {
 		this.dataEvento = dataEvento;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
 	}
 
 	public String getStatus() {

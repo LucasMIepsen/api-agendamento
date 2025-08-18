@@ -2,13 +2,11 @@ package com.example.blu_cidadao_app.api_agendamento.model;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,18 +20,10 @@ public class Servico {
     @Column(nullable = false, unique = true, length = 45)
     private String nome;
 
-    @OneToMany(mappedBy = "servico", cascade = CascadeType.ALL)
-    private List<Area> area;
-
-    @OneToMany(mappedBy = "servico", cascade = CascadeType.ALL)
-    private List<Agendamento> agendamento;
-
     public Servico (Integer idServico, String nome, List<Area> area, List<Agendamento> agendamento) {
     	
     	this.idServico = idServico;
     	this.nome = nome;
-    	this.area = area;
-    	this.agendamento = agendamento;
     	
     }
 
@@ -52,23 +42,6 @@ public class Servico {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-
-	public List<Area> getArea() {
-		return area;
-	}
-
-	public void setArea(List<Area> area) {
-		this.area = area;
-	}
-
-	public List<Agendamento> getAgendamento() {
-		return agendamento;
-	}
-
-	public void setAgendamento(List<Agendamento> agendamento) {
-		this.agendamento = agendamento;
-	}
-    
     
 
 }

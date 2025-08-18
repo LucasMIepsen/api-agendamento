@@ -2,7 +2,6 @@ package com.example.blu_cidadao_app.api_agendamento.service;
 
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.blu_cidadao_app.api_agendamento.model.Historico;
@@ -13,7 +12,6 @@ public class HistoricoService {
 
 private HistoricoRepo repo;
 	
-	@Autowired
 	public HistoricoService(HistoricoRepo repo) {
 		this.repo = repo;
 	}
