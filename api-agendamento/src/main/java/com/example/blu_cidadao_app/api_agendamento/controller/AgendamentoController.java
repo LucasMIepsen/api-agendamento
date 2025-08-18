@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.blu_cidadao_app.api_agendamento.model.Agendamento;
@@ -31,8 +32,8 @@ public class AgendamentoController {
 	
 	//Create
 	@PostMapping
-	public void inserirAgendamento(@RequestBody Agendamento a) {
-		servico.inserirAgendamento(a);
+	public Agendamento inserirAgendamento(@RequestBody Agendamento a, @RequestParam Integer idHorario) {
+		return servico.inserirAgendamento(a, idHorario);
 	}
 	
 	//Read

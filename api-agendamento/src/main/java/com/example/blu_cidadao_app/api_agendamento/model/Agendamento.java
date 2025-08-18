@@ -23,19 +23,19 @@ public class Agendamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idAgendamento;
 
-    @Column(nullable = false, length = 255)
+    @Column(name= "descricao", nullable = false, length = 255)
     private String descricao;
 
-    @Column(nullable = false, unique = true)
+    @Column(name= "data", nullable = false, unique = true)
     private LocalDate data;
 
-    @Column(length = 45)
+    @Column(name= "protocolo", length = 45)
     private String protocolo;
 
-    @Column(nullable = false)
+    @Column(name= "hora", nullable = false)
     private LocalDateTime hora;
 
-    @Column(nullable = false, length = 45)
+    @Column(name= "status", nullable = false, length = 45)
     private String status;
 
     @ManyToOne
