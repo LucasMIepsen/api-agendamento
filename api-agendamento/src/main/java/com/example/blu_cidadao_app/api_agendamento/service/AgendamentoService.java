@@ -1,76 +1,73 @@
 package com.example.blu_cidadao_app.api_agendamento.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.blu_cidadao_app.api_agendamento.model.Agendamento;
-import com.example.blu_cidadao_app.api_agendamento.model.Horario;
 import com.example.blu_cidadao_app.api_agendamento.repo.AgendamentoRepo;
-import com.example.blu_cidadao_app.api_agendamento.repo.HorarioRepo;
 
 @Service
 public class AgendamentoService {
 
-    private final AgendamentoRepo agendamentoRepo;
-    private final HorarioRepo horarioRepo;
+private AgendamentoRepo repo;
+	
+@Autowired
+public AgendamentoService(AgendamentoRepo repo) {
+	this.repo = repo;
+}
+	
 
-    public AgendamentoService(AgendamentoRepo agendamentoRepo, HorarioRepo horarioRepo) {
-        this.agendamentoRepo = agendamentoRepo;
-        this.horarioRepo = horarioRepo;
+	// Create
+
+public Agendamento cadastrarOuvidoria(Agendamento agendamento) {
+	agendamento.setProtocolo(protocoloAgendamento());
+    agendamento.setData(dataAgendamento());
+    return repo.save(agendamento);
+}
+    
+ // Gerar protocolo único
+    public String protocoloAgendamento() {
+        return "AGD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
-
-    // Create
-    public Agendamento inserirAgendamento(Agendamento agendamento, Integer idHorario) {
-        Horario horario = horarioRepo.findById(idHorario)
-                .orElseThrow(() -> new RuntimeException("Horário não encontrado"));
-
-        if (!horario.getDisponibilidade()) {
-            throw new RuntimeException("Horário já está ocupado!");
-        }
-
-        // Bloqueia horário
-        horario.setDisponibilidade(false);
-        horarioRepo.save(horario);
-
-        // Define status inicial
-        agendamento.setStatus("AGENDADO");
-        agendamento.setHora(horario.getHoraDisponivel().atDate(horario.getDataDisponivel()));
-
-        return agendamentoRepo.save(agendamento);
+    
+ // Gerar data do dia
+    public LocalDate dataAgendamento() {
+        return LocalDate.now();
     }
+	
+	// Read
 
-    // Read
-    public List<Agendamento> listarAgendamento() {
-        return agendamentoRepo.findAll();
-    }
 
-    public Optional<Agendamento> obterAgendamentoPorId(int id) {
-        return agendamentoRepo.findById(id);
-    }
-
-    // Update
-    public Agendamento atualizarAgendamento(Agendamento agendamento) {
-        return agendamentoRepo.save(agendamento);
-    }
-
-    // Delete
-    public void deletarAgendamento(int id) {
-        Optional<Agendamento> agendamento = agendamentoRepo.findById(id);
-
-        if (agendamento.isPresent()) {
-            // libera horário antes de deletar
-            Agendamento a = agendamento.get();
-            Horario horario = horarioRepo.findByDataDisponivelAndHoraDisponivelAndUnidade(
-                    a.getData(), a.getHora().toLocalTime(), a.getUnidade());
-
-            if (horario != null) {
-                horario.setDisponibilidade(true);
-                horarioRepo.save(horario);
-            }
-
-            agendamentoRepo.deleteById(id);
-        }
-    }
+	public List<Agendamento> listarAgendamento() {
+		return repo.findAll();
+	}
+	
+	public Optional<Agendamento> obterAgendamentoPorId(int id) {
+		return repo.findById(id);
+	}
+	
+	public Agendamento atualizarAgendamento(int id, Agendamento novoAgendamento) {
+	    return repo.findById(id).map(agendamento -> {
+	        agendamento.setDescricao(novoAgendamento.getDescricao());
+	        agendamento.setData(novoAgendamento.getData());
+	        agendamento.setHora(novoAgendamento.getHora());
+	        agendamento.setStatus(novoAgendamento.getStatus());
+	        agendamento.setServico(novoAgendamento.getServico());
+	        agendamento.setUnidade(novoAgendamento.getUnidade());
+	        agendamento.setHistorico(novoAgendamento.getHistorico());
+	        return repo.save(agendamento);
+	    }).orElseThrow(() -> new RuntimeException("Agendamento não encontrado!"));
+	}
+	
+	// Delete
+	
+	public void deletarAgendamento(int id) {
+		repo.deleteById(id);
+	}
+	
 }

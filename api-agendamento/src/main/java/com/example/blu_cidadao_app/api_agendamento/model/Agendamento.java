@@ -3,6 +3,7 @@ package com.example.blu_cidadao_app.api_agendamento.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -23,19 +24,19 @@ public class Agendamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idAgendamento;
 
-    @Column(name= "descricao", nullable = false, length = 255)
+    @Column(nullable = false, length = 255)
     private String descricao;
 
-    @Column(name= "data", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private LocalDate data;
 
-    @Column(name= "protocolo", length = 45)
+    @Column(length = 45)
     private String protocolo;
 
-    @Column(name= "hora", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime hora;
 
-    @Column(name= "status", nullable = false, length = 45)
+    @Column(nullable = false, length = 45)
     private String status;
 
     @ManyToOne
@@ -48,6 +49,19 @@ public class Agendamento {
 
     @OneToMany(mappedBy = "agendamento", cascade = CascadeType.ALL)
     private List<Historico> historico;
+    
+    
+  //Construtor vazio
+    public Agendamento() {
+        this.data = LocalDate.now();
+        this.protocolo = gerarProtocolo();
+    }
+
+    //Função de gerar protcolo
+    private String gerarProtocolo(){
+        return UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+    
 
 public Agendamento (Integer idAgendamento, String descricao, LocalDate data, String protocolo, LocalDateTime hora, String status, Servico servico, Unidade unidade, List<Historico> historico) {
 	
