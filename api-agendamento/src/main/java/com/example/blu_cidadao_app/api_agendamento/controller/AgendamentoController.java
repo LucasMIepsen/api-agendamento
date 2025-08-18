@@ -42,21 +42,31 @@ public class AgendamentoController {
 		return servico.listarAgendamento();
 	}
 	
-	@GetMapping("/{id}")
-	public Optional<Agendamento> obterAgendamentoPorId(@PathVariable int id) {
-		return servico.obterAgendamentoPorId(id);
-	}
+	// Buscar por ID
+    @GetMapping("/{protocolo}")
+    public ResponseEntity<Agendamento> buscarAgendamento(@PathVariable String protocolo) {
+        return servico.buscarPorProtocolo(protocolo)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
 	// Update
-	@PutMapping("/{id}")
-	public Agendamento atualizarAgendamento(@PathVariable int id, @RequestBody Agendamento a) {
-	    return servico.atualizarAgendamento(id, a);
-	}
+    // Atualizar por ID
+    @PutMapping("/{id}")
+    public ResponseEntity<Agendamento> atualizarAgendamento(@PathVariable int id, @RequestBody Agendamento a) {
+        try {
+        	Agendamento atualizada = servico.atualizarAgendamento(id, a);
+            return ResponseEntity.ok(atualizada);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 	
-	//Delete
-	@DeleteMapping("/{id}")
-	public void deletarAgendamento(@PathVariable int id) {
-		servico.deletarAgendamento(id);
-	}
+ // Deletar por ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarAgendamento(@PathVariable int id) {
+        servico.deletarAgendamento(id);
+        return ResponseEntity.noContent().build();
+    }
 	
 }

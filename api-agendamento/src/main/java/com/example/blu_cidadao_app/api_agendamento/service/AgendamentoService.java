@@ -41,9 +41,9 @@ public class AgendamentoService {
 		return repo.findAll();
 	}
 	
-	public Optional<Agendamento> obterAgendamentoPorId(int id) {
-		return repo.findById(id);
-	}
+	public Optional<Agendamento> buscarPorProtocolo(String protocolo) {
+        return repo.findByProtocolo(protocolo);
+    }
 	
 	public Agendamento atualizarAgendamento(int id, Agendamento novoAgendamento) {
 	    return repo.findById(id).map(agendamento -> {
